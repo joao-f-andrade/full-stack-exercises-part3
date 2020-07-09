@@ -1,7 +1,14 @@
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
+
+//Logs the requests and its content
+morgan.token('param', function(req, res) {
+    return req.method==='POST'?JSON.stringify(req.body):''
+});
 
 app.use(express.json())
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :param'))
 let persons = [
     {
         name: 'Arto Hellas',
@@ -61,19 +68,18 @@ app.delete('/api/persons/:id', (req, res) => {
 //Add person
 app.post('/api/persons', (req, res)  =>  {
     const person = req.body
-    if(!person.number || !person.name) {
+    if(!person.number || !person.name ) {
         const reason = person.number?'name':'number'
         return res.status(400).json({error: `${reason} is missing`})
     }
     repeated = persons.filter((old)=>old.name ===person.name )
-    console.log(repeated)
-    if (repeated) {
-      return  res.status(400).json({error: 'name must be unique'})
+    if (repeated.length>0) {
+        return  res.status(400).json({error: 'name must be unique'})
     }
 
     person.id= generateID()
     persons = persons.concat(person)
-    console.log('person',person)
+    console.log('new person:',person)
 
 
     res.json(person)
