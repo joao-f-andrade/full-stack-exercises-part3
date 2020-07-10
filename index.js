@@ -4,7 +4,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 
 app.use(cors())
-
+app.use(express.static('build'))
 //Logs the requests and its content
 morgan.token('param', function(req, res) {
     return req.method==='POST'?JSON.stringify(req.body):''
