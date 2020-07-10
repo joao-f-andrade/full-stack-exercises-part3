@@ -63,8 +63,8 @@ app.get('/api/persons/:id', (req, res) => {
 //Delete person
 app.delete('/api/persons/:id', (req, res) => {
     const id = req.params.id
-    const person = persons.filter(person => `${person.id}` !== id)
-    console.log(person)
+    console.log(id,)
+    persons = persons.filter(person => `${person.id}` !== id)
     
     res.status(204).end()
 })
